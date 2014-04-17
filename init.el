@@ -11,8 +11,6 @@
 ;(setq transient-mark-mode t)
 
 ;; default to better frame titles
-(setq frame-title-format
-      (concat  "%b - emacs@" (system-name)))
 
 ;; always end a file with a newline
 ;(setq require-final-newline 'query)
@@ -23,9 +21,6 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; Write backup files to own directory
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
 
 ;; Make backups of files, even when they're in version control
 
@@ -41,13 +36,10 @@
 ;; Matlab
 (autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
 (add-to-list 'auto-mode-alist '("\\.m$" . matlab-mode))
-(setq matlab-indent-function t)
-(setq matlab-shell-command "matlab")
 
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
 ;; Diminish modeline clutter
 (require 'diminish)
@@ -99,6 +91,7 @@
 
 ;; color themes
 (require 'bubbleberry-theme)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -110,7 +103,15 @@
  '(indent-tabs-mode t)
  '(default-tab-width 2)
  '(TeX-engine (quote luatex))
- '(TeX-PDF-mode t))
+ '(TeX-PDF-mode t)
+ '(matlab-indent-function t)
+ '(matlab-shell-command "matlab")
+ '(save-place-file (expand-file-name ".places" user-emacs-directory))
+ '(frame-title-format
+	 (concat  "%b - emacs@" (system-name)))
+ '(backup-directory-alist
+	 `(("." . ,(expand-file-name
+				 (concat user-emacs-directory "backups"))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
