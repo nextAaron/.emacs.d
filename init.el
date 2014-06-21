@@ -90,28 +90,49 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; color themes
-(require 'bubbleberry-theme)
+;;(require 'zenburn-theme);;bubbleberry-theme)
+(load-theme 'solarized-dark t)
+
+;;visual-basic-mode
+;; autoload visual-basic-mode
+(autoload 'visual-basic-mode "visual-basic-mode" "Visual Basic mode." t)
+(add-to-list 'auto-mode-alist '("\\.vbs\\'" . visual-basic-mode)) ; VBscript
+(add-to-list 'auto-mode-alist '("\\.vb\\'" . visual-basic-mode))  ; visual basic .NET file
+(add-to-list 'auto-mode-alist '("\\.bas\\'" . visual-basic-mode)) ; visual basic form
+(add-to-list 'auto-mode-alist '("\\.frm\\'" . visual-basic-mode)) ; basic language source
+(add-to-list 'auto-mode-alist '("\\.cls\\'" . visual-basic-mode)) ; C++ class definition file
+
+;; rainbow-delimiters
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+(setq show-paren-style 'expression)
+;; fix
+(defvar ac-sources nil)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(diff-switches "-u")
- '(vc-make-backup-files t)
- '(indent-tabs-mode t)
- '(default-tab-width 2)
- '(TeX-engine (quote luatex))
  '(TeX-PDF-mode t)
+ '(TeX-engine (quote luatex))
+ '(backup-directory-alist
+	 (\`
+		(("." \,
+			(expand-file-name
+			 (concat user-emacs-directory "backups"))))))
+ '(custom-safe-themes
+	 (quote
+		("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(default-tab-width 2 t)
+ '(diff-switches "-u")
+ '(frame-title-format (concat "%b - emacs@" (system-name)) t)
+ '(indent-tabs-mode t)
+ '(inhibit-startup-screen t)
  '(matlab-indent-function t)
  '(matlab-shell-command "matlab")
  '(save-place-file (expand-file-name ".places" user-emacs-directory))
- '(frame-title-format
-	 (concat  "%b - emacs@" (system-name)))
- '(backup-directory-alist
-	 `(("." . ,(expand-file-name
-				 (concat user-emacs-directory "backups"))))))
+ '(vc-make-backup-files t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
