@@ -103,7 +103,24 @@
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 
 ;; color themes
-(require 'bubbleberry-theme)
+;;(require 'zenburn-theme);;bubbleberry-theme)
+(load-theme 'solarized-dark t)
+
+;;visual-basic-mode
+;; autoload visual-basic-mode
+(autoload 'visual-basic-mode "visual-basic-mode" "Visual Basic mode." t)
+(add-to-list 'auto-mode-alist '("\\.vbs\\'" . visual-basic-mode)) ; VBscript
+(add-to-list 'auto-mode-alist '("\\.vb\\'" . visual-basic-mode))  ; visual basic .NET file
+(add-to-list 'auto-mode-alist '("\\.bas\\'" . visual-basic-mode)) ; visual basic form
+(add-to-list 'auto-mode-alist '("\\.frm\\'" . visual-basic-mode)) ; basic language source
+(add-to-list 'auto-mode-alist '("\\.cls\\'" . visual-basic-mode)) ; C++ class definition file
+
+;; rainbow-delimiters
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+(setq show-paren-style 'expression)
+;; fix
+(defvar ac-sources nil)
 
 ;; flyspell
 (dolist (hook '(text-mode-hook))
@@ -133,11 +150,6 @@
  ;; If there is more than one, they won't work right.
  '(TeX-PDF-mode t)
  '(TeX-engine (quote luatex))
- '(backup-directory-alist
-	 (\`
-		(("." \,
-			(expand-file-name
-			 (concat user-emacs-directory "backups"))))))
  '(default-tab-width 2 t)
  '(diff-switches "-u")
  '(frame-title-format (concat "%b - emacs@" (system-name)) t)
