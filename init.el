@@ -42,7 +42,7 @@
 (setq-default save-place t)
 
 ;; Diminish modeline clutter
-(require 'diminish)
+;(require 'diminish)
 ;(diminish 'wrap-region-mode)
 ;(diminish 'yas/minor-mode)
 
@@ -89,29 +89,64 @@
 ;; company-mode
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; irony
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's asynchronous function
+(defun my-irony-mode-hook ()
+	(define-key irony-mode-map [remap completion-at-point]
+		'irony-completion-at-point-async)
+	(define-key irony-mode-map [remap complete-symbol]
+		'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+
 ;; color themes
 (require 'bubbleberry-theme)
+
+;; flyspell
+(dolist (hook '(text-mode-hook))
+	(add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+	(add-hook hook (lambda () (flyspell-mode -1))))
+
+;; AUCTeX
+(eval-after-load "latex"
+  '(progn
+     (push '("zathura" "zathura -s -x \"emacsclient --no-wait +%%{line} %%{input}\" %s.pdf")
+           TeX-view-program-list)
+     (push '(output-pdf "zathura")
+           TeX-view-program-selection)))
+
+;; AUCTeX-LaTeXMk
+(require 'auctex-latexmk)
+(auctex-latexmk-setup)
+
+;; Fix
+(defvar ac-sources nil)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(diff-switches "-u")
- '(vc-make-backup-files t)
- '(indent-tabs-mode t)
- '(default-tab-width 2)
- '(TeX-engine (quote luatex))
  '(TeX-PDF-mode t)
+ '(TeX-engine (quote luatex))
+ '(backup-directory-alist
+	 (\`
+		(("." \,
+			(expand-file-name
+			 (concat user-emacs-directory "backups"))))))
+ '(default-tab-width 2 t)
+ '(diff-switches "-u")
+ '(frame-title-format (concat "%b - emacs@" (system-name)) t)
+ '(indent-tabs-mode t)
+ '(inhibit-startup-screen t)
  '(matlab-indent-function t)
  '(matlab-shell-command "matlab")
  '(save-place-file (expand-file-name ".places" user-emacs-directory))
- '(frame-title-format
-	 (concat  "%b - emacs@" (system-name)))
- '(backup-directory-alist
-	 `(("." . ,(expand-file-name
-				 (concat user-emacs-directory "backups"))))))
+ '(vc-make-backup-files t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
