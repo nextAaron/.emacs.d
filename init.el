@@ -16,9 +16,9 @@
 ;(setq require-final-newline 'query)
 
 ;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+;(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; Write backup files to own directory
 
@@ -83,8 +83,26 @@
 (add-hook 'c-mode-common-hook 'nchen/c-mode-cedet-hook)
 
 ;; autocomplete
-;(require 'auto-complete-config)
-;(global-auto-complete-mode t)
+(require 'auto-complete-config)
+(global-auto-complete-mode t)
+;(setq ac-quick-help-delay 0.5)
+(require 'auto-complete-clang)
+(setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources))
+(add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+(ac-set-trigger-key "TAB")
+(define-key ac-mode-map  [(control tab)] 'auto-complete)
+(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+(add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
+;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+(add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
+(add-hook 'css-mode-hook 'ac-css-mode-setup)
+(add-hook 'auto-complete-mode-hook 'ac-common-setup)
+(defun my-ac-cc-mode-setup ()
+	(setq ac-auto-start nil)
+  (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
+(add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+;; ac-source-gtags
+
 
 ;; company-mode
 (add-hook 'after-init-hook 'global-company-mode)
@@ -108,7 +126,8 @@
 
 ;;visual-basic-mode
 ;; autoload visual-basic-mode
-(autoload 'visual-basic-mode "visual-basic-mode" "Visual Basic mode." t)
+(autoload 'visual-basic-mode "visual-basic-mode"
+	"Visual Basic mode." t)
 (add-to-list 'auto-mode-alist '("\\.vbs\\'" . visual-basic-mode)) ; VBscript
 (add-to-list 'auto-mode-alist '("\\.vb\\'" . visual-basic-mode))  ; visual basic .NET file
 (add-to-list 'auto-mode-alist '("\\.bas\\'" . visual-basic-mode)) ; visual basic form
@@ -119,14 +138,13 @@
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
 (setq show-paren-style 'expression)
-;; fix
-(defvar ac-sources nil)
 
 ;; flyspell
 (dolist (hook '(text-mode-hook))
 	(add-hook hook (lambda () (flyspell-mode 1))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
 	(add-hook hook (lambda () (flyspell-mode -1))))
+(setq ispell-program-name "hunspell")
 
 ;; AUCTeX
 (eval-after-load "latex"
@@ -137,14 +155,45 @@
            TeX-view-program-selection)))
 
 ;; AUCTeX-LaTeXMk
-(require 'auctex-latexmk)
-(auctex-latexmk-setup)
+;(require 'auctex-latexmk)
+;(auctex-latexmk-setup)
+
+;; PKGBUILD mode
+(autoload 'pkgbuild-mode "pkgbuild-mode.el"
+	"PKGBUILD mode." t)
+(setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode))
+			      auto-mode-alist))
+
+;; Markdown mode
+(autoload 'markdown-mode "markdown-mode"
+	"Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; CSV mode
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
 
 ;; compile
 (global-set-key "\C-x\C-m" 'compile)
 
+;; Hunspell
+;(add-to-list 'ispell-local-dictionary-alist
+;	     '("english-hunspell"
+;	       "[[:alpha:]]"
+;	       "[^[:alpha:]]"
+;	       "[']"
+;	       t
+;	       ("-d" "en_US")
+;	       nil
+;	       iso-8859-1))
+
+;(setq ispell-dictionary   "english-hunspell")
+
 ;; Fix
-(defvar ac-sources nil)
+;(defvar ac-sources nil)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -158,6 +207,7 @@
  '(frame-title-format (concat "%b - emacs@" (system-name)) t)
  '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
+ '(ispell-program-name "hunspell")
  '(matlab-indent-function t)
  '(matlab-shell-command "matlab")
  '(save-place-file (expand-file-name ".places" user-emacs-directory))
